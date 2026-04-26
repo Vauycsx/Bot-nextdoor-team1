@@ -9,24 +9,28 @@ from config import BOT_TOKEN, WEBHOOK_URL, WEBHOOK_PATH
 from db import init_db
 from handlers import router
 
-bot = Bot(BOT_TOKEN)
+
+bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 dp.include_router(router)
 
 
-async def on_startup(bot: Bot):
+async def on_startup():
     await init_db()
     await bot.set_webhook(WEBHOOK_URL)
+    print("Webhook set:", WEBHOOK_URL)
 
 
-async def on_shutdown(bot: Bot):
+async def on_shutdown():
     await bot.delete_webhook()
     await bot.session.close()
+    print("Bot shutdown")
 
 
 def main():
     app = web.Application()
 
+    # подключаем aiogram webhook handler к aiohttp
     SimpleRequestHandler(
         dispatcher=dp,
         bot=bot,
@@ -34,8 +38,11 @@ def main():
 
     setup_application(app, dp, bot=bot)
 
-    app.on_startup.append(lambda app: on_startup(bot))
-    app.on_shutdown.append(lambda app: on_shutdown(bot))
+    # lifecycle hooks
+    app.on_startup.append(lambda app: on_startup())
+    app.on_shutdown.append(lambda app: on_shutdown())
+
+    print("Server starting...")
 
     web.run_app(app, host="0.0.0.0", port=10000)
 
