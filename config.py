@@ -1,5 +1,7 @@
 import os
 import sys
+from keep_alive import keep_alive
+keep_alive()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
