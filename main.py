@@ -1,3 +1,7 @@
+import os
+print("BOT_TOKEN:", os.getenv("BOT_TOKEN"))
+print("DATABASE_URL:", os.getenv("DATABASE_URL"))
+print("WEBHOOK_URL:", os.getenv("WEBHOOK_URL"))
 
 import asyncio
 from aiogram import Bot, Dispatcher
