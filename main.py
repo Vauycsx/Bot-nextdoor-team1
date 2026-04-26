@@ -27,15 +27,10 @@ async def on_shutdown():
     await bot.session.close()
 
 
-async def main():
-    await on_startup()
-
+def main():
     app = web.Application()
-    SimpleRequestHandler(dp, bot).register(app, path=WEBHOOK_PATH)
-    setup_application(app, dp, bot=bot)
-
+    # setup routes, etc.
     web.run_app(app, host="0.0.0.0", port=10000)
 
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
